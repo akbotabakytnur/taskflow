@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests - TaskFlow</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        nav {
+            background: #ffffff;
+            padding: 18px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e7ebf3;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: 800;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 9px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .nav-links a.create-link {
+            background: #2563eb;
+            color: white;
+        }
+
+        .nav-links a.create-link:hover {
+            background: #1d4ed8;
+        }
+
+        main {
+            width: 88%;
+            max-width: 1250px;
+            margin: 38px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin: 0 0 8px;
+            letter-spacing: -0.7px;
+        }
+
+        .subtitle {
+            color: #7b879b;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .new-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px #2563eb20;
+        }
+
+        .new-button:hover {
+            background: #1d4ed8;
+        }
+
+        .table-card {
+            background: white;
+            border: 1px solid #e8edf5;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px #17203308;
+        }
+
+        .table-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .table-header h2 {
+            font-size: 17px;
+            margin: 0 0 5px;
+        }
+
+        .table-header p {
+            margin: 0;
+            font-size: 13px;
+            color: #8a94a6;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8faff;
+            color: #7b879b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            font-weight: 700;
+            padding: 16px 22px;
+            text-align: left;
+        }
+
+        td {
+            padding: 19px 22px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .request-id {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .request-title {
+            color: #172033;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-new {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .status-progress {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-completed {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-other {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .priority-high {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .priority-medium {
+            color: #b45309;
+            background: #fffbeb;
+        }
+
+        .priority-low {
+            color: #047857;
+            background: #ecfdf5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            color: #7b879b;
+        }
+
+        .empty-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            color: #172033;
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .empty-state p {
+            margin: 0 0 20px;
+            font-size: 14px;
+        }
+
+        .error-message {
+            display: none;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            color: #b91c1c;
+            background: #fef2f2;
+        }
+
+        footer {
+            text-align: center;
+            color: #9aa4b5;
+            font-size: 12px;
+            padding: 25px 10px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            .nav-links {
+                gap: 3px;
+            }
+
+            .nav-links a {
+                padding: 9px;
+                font-size: 12px;
+            }
+
+            main {
+                width: 92%;
+                margin: 28px auto;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/dashboard" class="brand">TaskFlow</a>
+
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/my-requests" class="active">My Requests</a>
+            <a href="/create-request" class="create-link">+ Create Request</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>My Requests</h1>
+                <p class="subtitle">Track and manage your IT support requests.</p>
+            </div>
+
+            <a href="/create-request" class="new-button">+ New Request</a>
+        </div>
+
+        <div id="error" class="error-message">
+            Could not load your requests. Please refresh the page and try again.
+        </div>
+
+        <section class="table-card">
+            <div class="table-header">
+                <h2>All My Requests</h2>
+                <p>View the status and priority of your requests.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="requests"></tbody>
+                </table>
+            </div>
+
+            <div id="empty" class="empty-state" style="display: none;">
+                <div class="empty-icon">📋</div>
+                <h3>No requests yet</h3>
+                <p>Create your first IT support request to get started.</p>
+                <a href="/create-request" class="new-button">Create Request</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        TaskFlow · IT Support Request Management System
+    </footer>
+
+    <script>
+        fetch("/api/my-requests")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to load requests");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const table = document.getElementById("requests");
+                const empty = document.getElementById("empty");
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    empty.style.display = "block";
+                    return;
+                }
+
+                data.forEach(request => {
+                    const row = document.createElement("tr");
+
+                    const status = String(request.status || "Unknown");
+                    const priority = String(request.priority || "Normal");
+
+                    const statusLower = status.toLowerCase();
+                    let statusClass = "status-other";
+
+                    if (statusLower === "new") {
+                        statusClass = "status-new";
+                    } else if (
+                        statusLower.includes("progress") ||
+                        statusLower.includes("working")
+                    ) {
+                        statusClass = "status-progress";
+                    } else if (
+                        statusLower.includes("completed") ||
+                        statusLower.includes("resolved") ||
+                        statusLower.includes("closed")
+                    ) {
+                        statusClass = "status-completed";
+                    }
+
+                    const priorityLower = priority.toLowerCase();
+                    let priorityClass = "status-other";
+
+                    if (priorityLower === "high") {
+                        priorityClass = "priority-high";
+                    } else if (priorityLower === "medium") {
+                        priorityClass = "priority-medium";
+                    } else if (priorityLower === "low") {
+                        priorityClass = "priority-low";
+                    }
+
+                    function addCell(value, className) {
+                        const cell = document.createElement("td");
+                        cell.textContent = value ?? "—";
+
+                        if (className) {
+                            cell.className = className;
+                        }
+
+                        row.appendChild(cell);
+                    }
+
+                    addCell("#" + request.id, "request-id");
+                    addCell(request.category);
+                    addCell(request.title, "request-title");
+
+                    const priorityCell = document.createElement("td");
+                    const priorityBadge = document.createElement("span");
+                    priorityBadge.className = "badge " + priorityClass;
+                    priorityBadge.textContent = priority;
+                    priorityCell.appendChild(priorityBadge);
+                    row.appendChild(priorityCell);
+
+                    const statusCell = document.createElement("td");
+                    const statusBadge = document.createElement("span");
+                    statusBadge.className = "badge " + statusClass;
+                    statusBadge.textContent = status;
+                    statusCell.appendChild(statusBadge);
+                    row.appendChild(statusCell);
+
+                    table.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error("Error loading requests:", error);
+                document.getElementById("error").style.display = "block";
+            });
+    </script>
+
+</body>
+</html>
